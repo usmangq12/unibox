@@ -28,16 +28,19 @@ Unibox is a Next.js application that combines emails from both Gmail and Outlook
    ```bash
    yarn install
    ```
-3. **Create a .env.local in the root of the project**
-   ```bash
+3. **Set Environment Variables**
+
+```bash
    NEXTAUTH_URL=http://localhost:3000
    GOOGLE_CLIENT_ID=your-google-client-id
    GOOGLE_CLIENT_SECRET=your-google-client-secret
-   MICROSOFT_CLIENT_ID=your-microsoft-client-id
-   MICROSOFT_CLIENT_SECRET=your-microsoft-client-    secret
-   JWT_SECRET=your-jwt-secret
-   ```
+   AZURE_AD_CLIENT_ID=your-microsoft-client-id
+   AZURE_AD_CLIENT_SECRET=your-microsoft-client-secret
+   AZURE_AD_TENANT_ID=your-azure-tenant-id
+```
+
 ## Running the Application
+
 1. **Start the development server:**
    ```bash
    yarn run dev
@@ -47,25 +50,14 @@ Unibox is a Next.js application that combines emails from both Gmail and Outlook
    http://localhost:3000
    ```
 
-## Authentication Providers\*\*
+## Authentication Providers
 
 **Google**
 
 - Ensure the Gmail API is enabled in the Google Cloud Console.
 - Add the following OAuth 2.0 scope:
-  https://www.googleapis.com/auth/gmail.readonly
-  https://www.googleapis.com/auth/gmail.send
+  1. https://www.googleapis.com/auth/gmail.readonly
+  2. https://www.googleapis.com/auth/gmail.send
   **Microsoft**
 - Ensure the Microsoft Graph API is enabled in the Azure portal.
 - Add the following OAuth 2.0 scope: https://graph.microsoft.com/Mail.ReadWrite.
-
-## Example Environment Variables
-
-```bash
-NEXTAUTH_URL=http://localhost:3000
-GOOGLE_CLIENT_ID=your-google-client-id
-GOOGLE_CLIENT_SECRET=your-google-client-secret
-AZURE_AD_CLIENT_ID=your-microsoft-client-id
-AZURE_AD_CLIENT_SECRET=your-microsoft-client-secret
-AZURE_AD_TENANT_ID=your-microsoft-tenant-id
-```
