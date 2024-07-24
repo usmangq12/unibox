@@ -1,5 +1,5 @@
 "use client";
-import { SetStateAction, useState } from "react";
+import { useState } from "react";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -21,17 +21,19 @@ interface Email {
   body: string;
   date: string;
   avatar: string;
+  replay: string[]; // Changed from `replay` to `replay` for consistency
 }
 
 export default function DashboardComponent() {
-  const [selectedEmail, setSelectedEmail] =  useState<Email | null>(null);
+  const [selectedEmail, setSelectedEmail] = useState<Email | null>(null);
   const [isReplyOpen, setIsReplyOpen] = useState(false);
   const [isComposeOpen, setIsComposeOpen] = useState(false);
   const [replyText, setReplyText] = useState("");
   const [composeSubject, setComposeSubject] = useState("");
   const [composeBody, setComposeBody] = useState("");
   const [composeEmail, setComposeEmail] = useState("");
-  const emails = [
+
+  const [emails, setEmails] = useState<Email[]>([
     {
       id: 1,
       name: "Olivia Davis",
@@ -39,6 +41,7 @@ export default function DashboardComponent() {
       body: "Hi, let's have a meeting tomorrow to discuss the project.",
       date: "Oct 08, 2023 9:15 AM",
       avatar: "OD",
+      replay: []
     },
     {
       id: 2,
@@ -47,6 +50,7 @@ export default function DashboardComponent() {
       body: "Dear valued customer, we are excited to introduce our latest product!",
       date: "Oct 08, 2023 10:00 AM",
       avatar: "MT",
+      replay: []
     },
     {
       id: 3,
@@ -55,6 +59,7 @@ export default function DashboardComponent() {
       body: "Hi, let's have a meeting tomorrow to discuss the project.",
       date: "Oct 08, 2023 9:15 AM",
       avatar: "OD",
+      replay: []
     },
     {
       id: 4,
@@ -63,14 +68,36 @@ export default function DashboardComponent() {
       body: "Dear valued customer, we are excited to introduce our latest product!",
       date: "Oct 08, 2023 10:00 AM",
       avatar: "MT",
+      replay: []
     },
-  ];
+  ]);
+
   const handleReply = () => setIsReplyOpen(true);
   const handleCompose = () => setIsComposeOpen(true);
   const handleEmailClick = (email: Email) => setSelectedEmail(email);
+
+  const handleSendReply = () => {
+    if (selectedEmail) {
+      // Add reply to the selected email
+      const updatedEmails = emails.map((email) => {
+        if (email.id === selectedEmail.id) {
+          return {
+            ...email,
+            replay: [...email.replay, replyText], // Add the new reply
+          };
+        }
+        return email;
+      });
+
+      setEmails(updatedEmails); // Update state with new emails list
+      setReplyText(""); // Clear reply input
+      setIsReplyOpen(false); // Close the reply drawer
+    }
+  };
+
   return (
-    <div className=" flex  gap-6 w-full  p-8 relative h-screen">
-      <div className="bg-background border rounded-lg w-64 lg:w-80 ">
+    <div className="flex gap-6 w-full p-8 relative h-screen">
+      <div className="bg-background border rounded-lg w-64 lg:w-80">
         <div className="px-4 py-3 border-b bg-muted flex justify-between items-center">
           <h2 className="text-lg font-semibold">Inbox</h2>
           <Button onClick={handleCompose} className="ml-4">
@@ -93,6 +120,12 @@ export default function DashboardComponent() {
                 <div className="text-sm text-muted-foreground line-clamp-1">
                   {email.body}
                 </div>
+                {email.replay.length > 0 && <h4 className = "text-sm font-bold text-slate-500">Replay</h4>}
+                {email.replay.map((replay, index) => (
+                  <div key={index} className="text-sm text-muted-foreground line-clamp-1">
+                    {replay}
+                  </div>
+                ))}
               </div>
             </div>
           ))}
@@ -124,6 +157,16 @@ export default function DashboardComponent() {
                 </div>
               </div>
             </div>
+            {selectedEmail.replay.length > 0 && (
+              <div>
+                <h3 className="text-lg font-semibold">Replies</h3>
+                {selectedEmail.replay.map((reply, index) => (
+                  <div key={index} className="text-sm text-muted-foreground">
+                    {reply}
+                  </div>
+                ))}
+              </div>
+            )}
             <Button className="w-full" onClick={handleReply}>
               Reply
             </Button>
@@ -149,7 +192,7 @@ export default function DashboardComponent() {
             />
           </DrawerDescription>
           <DrawerFooter className="flex justify-between">
-            <Button onClick={() => setIsReplyOpen(false)}>Send</Button>
+            <Button onClick={handleSendReply}>Send</Button>
             <Button
               onClick={() => setIsReplyOpen(false)}
               variant="outline"
@@ -168,8 +211,8 @@ export default function DashboardComponent() {
             <DrawerClose onClick={() => setIsComposeOpen(false)} />
           </DrawerHeader>
           <DrawerDescription className="p-4">
-            <label className="font-semibold ">To</label>
-          <Input
+            <label className="font-semibold">To</label>
+            <Input
               placeholder="email"
               value={composeEmail}
               onChange={(e) => setComposeEmail(e.target.value)}
