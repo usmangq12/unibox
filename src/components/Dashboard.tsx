@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { SetStateAction, useState } from "react";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -14,8 +14,17 @@ import {
   DrawerOverlay,
 } from "@/components/ui/drawer";
 
+interface Email {
+  id: number;
+  name: string;
+  subject: string;
+  body: string;
+  date: string;
+  avatar: string;
+}
+
 export default function DashboardComponent() {
-  const [selectedEmail, setSelectedEmail] = useState(null);
+  const [selectedEmail, setSelectedEmail] =  useState<Email | null>(null);
   const [isReplyOpen, setIsReplyOpen] = useState(false);
   const [isComposeOpen, setIsComposeOpen] = useState(false);
   const [replyText, setReplyText] = useState("");
@@ -58,7 +67,7 @@ export default function DashboardComponent() {
   ];
   const handleReply = () => setIsReplyOpen(true);
   const handleCompose = () => setIsComposeOpen(true);
-  const handleEmailClick = (email) => setSelectedEmail(email);
+  const handleEmailClick = (email: Email) => setSelectedEmail(email);
   return (
     <div className=" flex  gap-6 w-full  p-8 relative h-screen">
       <div className="bg-background border rounded-lg w-64 lg:w-80 ">
@@ -136,7 +145,7 @@ export default function DashboardComponent() {
               value={replyText}
               onChange={(e) => setReplyText(e.target.value)}
               className="w-full h-full resize-none"
-              as="textarea"
+              type="textarea"
             />
           </DrawerDescription>
           <DrawerFooter className="flex justify-between">
@@ -177,7 +186,7 @@ export default function DashboardComponent() {
               value={composeBody}
               onChange={(e) => setComposeBody(e.target.value)}
               className="w-full h-full resize-none"
-              as="textarea"
+              type="textarea"
             />
           </DrawerDescription>
           <DrawerFooter className="flex justify-between">

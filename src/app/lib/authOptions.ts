@@ -13,7 +13,6 @@ export const authOptions: NextAuthOptions = {
       clientSecret: process.env.AZURE_AD_CLIENT_SECRET!,
       tenantId: process.env.AZURE_AD_TENANT_ID!,
       authorization: { params: { scope: "openid profile email" } },
-      redirectUri: "http://localhost:3000/api/auth/callback/azure-ad",
     }),
   ],
  

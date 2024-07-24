@@ -1,10 +1,9 @@
 "use client";
 import Image from "next/image";
 import React from "react";
-import GmailSvg from "../../../public/gmail.svg";
-import OutlookSvg from "../../../public/outlook.svg";
+import GmailSvg from "../../public/gmail.svg";
+import OutlookSvg from "../../public/outlook.svg"
 import { signIn } from "next-auth/react";
-import { generateCodeChallenge, generateCodeVerifier } from "../utils/oauth2";
 
 const LoginComponent = () => {
   const handleLoginWithGmail = () => {
