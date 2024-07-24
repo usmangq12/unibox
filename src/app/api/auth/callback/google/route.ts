@@ -1,11 +1,11 @@
 import { NextResponse } from "next/server";
 
 export async function GET(request: Request) {
-  console.log("GET request***")
+  
   const url = new URL(request.url);
   const state = url.searchParams.get("state");
   const code = url.searchParams.get("code");
-  
+
   if (!state || !code) {
     return NextResponse.json({ message: "Invalid request" }, { status: 400 });
   }

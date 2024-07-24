@@ -2,27 +2,13 @@
 import Image from "next/image";
 import React from "react";
 import GmailSvg from "../../public/gmail.svg";
-import OutlookSvg from "../../public/outlook.svg"
+import OutlookSvg from "../../public/outlook.svg";
 import { signIn } from "next-auth/react";
 
 const LoginComponent = () => {
   const handleLoginWithGmail = () => {
-     console.log("Login",signIn);
+    console.log("Login", signIn);
     signIn("google", { callbackUrl: "/" });
-    // async function initiateOAuthFlow() {
-    //   const codeVerifier = generateCodeVerifier();
-    //   const codeChallenge = await generateCodeChallenge(codeVerifier);
-    //   console.log("CodeVerifier", codeChallenge);
-    //   // Store the codeVerifier in localStorage to use it later in the callback
-    //   if (typeof window !== "undefined") {
-    //     localStorage.setItem("codeVerifier", codeVerifier);
-    //     console.log("CodeChallenge", process.env.GOOGLE_CLIENT_ID);
-    //     const authorizationUrl = `https://accounts.google.com/o/oauth2/v2/auth?response_type=code&client_id=${process.env.GOOGLE_CLIENT_ID}&redirect_uri=http://localhost:3000/api/auth/callback/google&scope=openid%20email%20profile&state=randomState&code_challenge=${codeChallenge}&code_challenge_method=S256`;
-    //     window.location.href = authorizationUrl;
-    //   }
-    // }
-
-    // initiateOAuthFlow();
   };
 
   const handleLoginWithOutlook = () => {
