@@ -61,3 +61,6 @@ Unibox is a Next.js application that combines emails from both Gmail and Outlook
   **Microsoft**
 - Ensure the Microsoft Graph API is enabled in the Azure portal.
 - Add the following OAuth 2.0 scope: https://graph.microsoft.com/Mail.ReadWrite.
+
+## App Introduction Loom Video Attached
+https://www.loom.com/share/8aefb510b4524b9fbdb23d66f8541ee9?sid=7100801d-79fc-4ba5-8368-f425f4406c75
