@@ -21,7 +21,7 @@ interface Email {
   body: string;
   date: string;
   avatar: string;
-  replay: string[]; // Changed from `replay` to `replay` for consistency
+  replay: string[]; // Make sure property name is consistent
 }
 
 export default function DashboardComponent() {
@@ -41,7 +41,7 @@ export default function DashboardComponent() {
       body: "Hi, let's have a meeting tomorrow to discuss the project.",
       date: "Oct 08, 2023 9:15 AM",
       avatar: "OD",
-      replay: []
+      replay: [],
     },
     {
       id: 2,
@@ -50,7 +50,7 @@ export default function DashboardComponent() {
       body: "Dear valued customer, we are excited to introduce our latest product!",
       date: "Oct 08, 2023 10:00 AM",
       avatar: "MT",
-      replay: []
+      replay: [],
     },
     {
       id: 3,
@@ -59,7 +59,7 @@ export default function DashboardComponent() {
       body: "Hi, let's have a meeting tomorrow to discuss the project.",
       date: "Oct 08, 2023 9:15 AM",
       avatar: "OD",
-      replay: []
+      replay: [],
     },
     {
       id: 4,
@@ -68,7 +68,7 @@ export default function DashboardComponent() {
       body: "Dear valued customer, we are excited to introduce our latest product!",
       date: "Oct 08, 2023 10:00 AM",
       avatar: "MT",
-      replay: []
+      replay: [],
     },
   ]);
 
@@ -92,6 +92,9 @@ export default function DashboardComponent() {
       setEmails(updatedEmails); // Update state with new emails list
       setReplyText(""); // Clear reply input
       setIsReplyOpen(false); // Close the reply drawer
+      setSelectedEmail(
+        updatedEmails.find((email) => email.id === selectedEmail.id) || null
+      ); // Ensure selectedEmail is updated
     }
   };
 
@@ -120,12 +123,6 @@ export default function DashboardComponent() {
                 <div className="text-sm text-muted-foreground line-clamp-1">
                   {email.body}
                 </div>
-                {email.replay.length > 0 && <h4 className = "text-sm font-bold text-slate-500">Replay</h4>}
-                {email.replay.map((replay, index) => (
-                  <div key={index} className="text-sm text-muted-foreground line-clamp-1">
-                    {replay}
-                  </div>
-                ))}
               </div>
             </div>
           ))}
@@ -157,19 +154,30 @@ export default function DashboardComponent() {
                 </div>
               </div>
             </div>
+            <Button className="w-full" onClick={handleReply}>
+              Reply
+            </Button>
             {selectedEmail.replay.length > 0 && (
               <div>
-                <h3 className="text-lg font-semibold">Replies</h3>
                 {selectedEmail.replay.map((reply, index) => (
-                  <div key={index} className="text-sm text-muted-foreground">
-                    {reply}
+                  <div className=" border-t-2 border-t-slate-100">
+                    <div className="flex gap-3 items-center mt-2 ">
+                      <Avatar className="h-10 w-10">
+                        <AvatarImage src="/placeholder-user.jpg" />
+                        <AvatarFallback>{selectedEmail.avatar}</AvatarFallback>
+                      </Avatar>
+                      <h3 className="text-lg font-semibold mb-2">Reply</h3>
+                    </div>
+                    <div
+                      key={index}
+                      className="text-sm text-muted-foreground mb-2  ml-14"
+                    >
+                      {reply}
+                    </div>
                   </div>
                 ))}
               </div>
             )}
-            <Button className="w-full" onClick={handleReply}>
-              Reply
-            </Button>
           </div>
         ) : (
           <div className="p-4">Select an email to see details.</div>
@@ -188,7 +196,7 @@ export default function DashboardComponent() {
               value={replyText}
               onChange={(e) => setReplyText(e.target.value)}
               className="w-full h-full resize-none"
-              type="textarea"
+              type="textarea" // Changed `type` to `as`
             />
           </DrawerDescription>
           <DrawerFooter className="flex justify-between">
