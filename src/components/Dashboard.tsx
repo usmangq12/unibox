@@ -1,7 +1,13 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+} from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import {
   Drawer,
@@ -13,6 +19,10 @@ import {
   DrawerTitle,
   DrawerOverlay,
 } from "@/components/ui/drawer";
+
+import { useRouter } from "next/navigation";
+import Link from "next/link";
+import Image from "next/image";
 
 interface Email {
   id: number;
@@ -32,6 +42,9 @@ export default function DashboardComponent() {
   const [composeSubject, setComposeSubject] = useState("");
   const [composeBody, setComposeBody] = useState("");
   const [composeEmail, setComposeEmail] = useState("");
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  const router = useRouter();
 
   const [emails, setEmails] = useState<Email[]>([
     {
@@ -98,6 +111,29 @@ export default function DashboardComponent() {
     }
   };
 
+  useEffect(() => {
+    const checkLoggedIn = async () => {
+      const res = await fetch("http://localhost:3000/api/auth/login");
+      console.log("res**", res);
+      if (!res.ok) {
+        throw Error("Failed to fetch data");
+      }
+    };
+
+    checkLoggedIn();
+  }, []);
+
+  const handleLogout = async () => {
+    console.log("logout called");
+
+    const response = await fetch("/api/auth/logout", { method: "GET" });
+    if (response.ok) {
+      console.log("Logout successful, redirecting to login page...");
+      router.push("/login");
+    }
+    // await fetch('/api/auth/logout', { method: 'GET' });
+  };
+
   return (
     <div className="flex gap-6 w-full p-8 relative h-screen">
       <div className="bg-background border rounded-lg w-64 lg:w-80">
@@ -129,9 +165,35 @@ export default function DashboardComponent() {
         </div>
       </div>
       <div className="bg-background border rounded-lg overflow-hidden flex-1">
-        <div className="px-4 py-3 border-b bg-muted">
-          <h2 className="text-lg font-semibold">Email Details</h2>
-        </div>
+        <header className="flex items-center justify-between bg-primary px-4 py-3 shadow-sm md:px-6">
+          <div className="text-2xl font-bold tracking-tight text-primary-foreground">
+            Email Details
+          </div>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button size="icon">
+                <Image
+                  src="/ellipsis.svg"
+                  alt="Menu Icon"
+                  width="24"
+                  height="24"
+                />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem onClick={handleLogout}>
+                <Link
+                  href="#"
+                  className="flex items-center gap-2"
+                  prefetch={false}
+                >
+                  <div className="h-4 w-4" />
+                  <span>Logout</span>
+                </Link>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </header>
         {selectedEmail ? (
           <div className="p-4 space-y-4">
             <div className="flex items-start gap-4">
