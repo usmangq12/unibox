@@ -21,7 +21,7 @@ interface Email {
   body: string;
   date: string;
   avatar: string;
-  replay: string[]; // Make sure property name is consistent
+  replay: string[];
 }
 
 export default function DashboardComponent() {
@@ -52,49 +52,71 @@ export default function DashboardComponent() {
       avatar: "MT",
       replay: [],
     },
-    {
-      id: 3,
-      name: "Olivia Davis",
-      subject: "Question about Budget",
-      body: "Hi, let's have a meeting tomorrow to discuss the project.",
-      date: "Oct 08, 2023 9:15 AM",
-      avatar: "OD",
-      replay: [],
-    },
-    {
-      id: 4,
-      name: "Matthew Taylor",
-      subject: "New Product Announcement",
-      body: "Dear valued customer, we are excited to introduce our latest product!",
-      date: "Oct 08, 2023 10:00 AM",
-      avatar: "MT",
-      replay: [],
-    },
   ]);
 
   const handleReply = () => setIsReplyOpen(true);
   const handleCompose = () => setIsComposeOpen(true);
   const handleEmailClick = (email: Email) => setSelectedEmail(email);
 
-  const handleSendReply = () => {
+  const handleSendReply = async () => {
+    console.log("Send Compose",selectedEmail,"Reply Text",replyText);
     if (selectedEmail) {
-      // Add reply to the selected email
       const updatedEmails = emails.map((email) => {
         if (email.id === selectedEmail.id) {
           return {
             ...email,
-            replay: [...email.replay, replyText], // Add the new reply
+            replay: [...email.replay, replyText],
           };
         }
         return email;
       });
 
-      setEmails(updatedEmails); // Update state with new emails list
-      setReplyText(""); // Clear reply input
-      setIsReplyOpen(false); // Close the reply drawer
+      setEmails(updatedEmails);
+      setReplyText("");
+      setIsReplyOpen(false);
       setSelectedEmail(
         updatedEmails.find((email) => email.id === selectedEmail.id) || null
-      ); // Ensure selectedEmail is updated
+      );
+
+      // try {
+      //   await fetch('/api/send', {
+      //     method: 'POST',
+      //     headers: {
+      //       'Content-Type': 'application/json',
+      //     },
+      //     body: JSON.stringify({
+      //       recipient: selectedEmail.name, 
+      //       subject: `Re: ${selectedEmail.subject}`,
+      //       emailContent: replyText,
+      //     }),
+      //   });
+      // } catch (error) {
+      //   console.error("Error sending reply:", error);
+      // }
+    }
+  };
+
+  const handleSendCompose = async () => {
+    console.log("Sent compose",composeBody,composeSubject,composeEmail);
+    try {
+      await fetch('/api/send', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+
+        body: JSON.stringify({
+          recipient: composeEmail,
+          subject: composeSubject,
+          emailContent: composeBody,
+        }),
+      });
+      setComposeEmail("");
+      setComposeSubject("");
+      setComposeBody("");
+      setIsComposeOpen(false);
+    } catch (error) {
+      console.error("Error sending composed email:", error);
     }
   };
 
@@ -196,7 +218,7 @@ export default function DashboardComponent() {
               value={replyText}
               onChange={(e) => setReplyText(e.target.value)}
               className="w-full h-full resize-none"
-              type="textarea" // Changed `type` to `as`
+              type="textarea"
             />
           </DrawerDescription>
           <DrawerFooter className="flex justify-between">
@@ -241,7 +263,7 @@ export default function DashboardComponent() {
             />
           </DrawerDescription>
           <DrawerFooter className="flex justify-between">
-            <Button onClick={() => setIsComposeOpen(false)}>Send</Button>
+            <Button onClick={handleSendCompose}>Send</Button>
             <Button
               onClick={() => setIsComposeOpen(false)}
               variant="outline"
